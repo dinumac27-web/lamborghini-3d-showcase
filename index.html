@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lamborghini Aventador LP 780-4 | Ultimae</title>
+    <meta name="description" content="Experience the Lamborghini Aventador LP 780-4 Ultimae in stunning 3D. Explore the naturally aspirated V12 engine, carbon-ceramic brakes, and aerodynamic masterpiece." />
+
+    <!-- Google Fonts: Space Grotesk + Syncopate -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syncopate:wght@700&display=swap" rel="stylesheet" />
+
+    <!-- Import Map for ES Modules -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ===================== LOADING SCREEN ===================== -->
+    <div id="loader" class="loader">
+        <div class="loader-inner">
+            <div class="loader-logo">LAMBORGHINI</div>
+            <div class="loader-bar-track">
+                <div class="loader-bar-fill" id="loaderBar"></div>
+            </div>
+            <div class="loader-percent" id="loaderPercent">0%</div>
+        </div>
+    </div>
+
+    <!-- ===================== DIAGONAL BACKGROUND ===================== -->
+    <div class="bg-diagonal">
+        <div class="bg-diagonal-white"></div>
+        <div class="bg-diagonal-accent"></div>
+    </div>
+
+    <!-- ===================== MASSIVE BACKGROUND TEXT ===================== -->
+    <div class="bg-text" aria-hidden="true">
+        <span class="bg-text-main">AVENTADOR</span>
+        <span class="bg-text-sub">LP 780-4</span>
+    </div>
+
+    <!-- ===================== TOP NAVIGATION ===================== -->
+    <nav class="top-nav" id="topNav">
+        <div class="nav-left">
+            <a href="#" class="nav-logo" aria-label="Lamborghini Home">
+                <!-- Lamborghini Shield SVG -->
+                <svg class="logo-icon" viewBox="0 0 40 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 0L40 12v24L20 48 0 36V12L20 0z" fill="currentColor" opacity="0.9"/>
+                    <path d="M20 6l14 8.4v16.8L20 39.6 6 31.2V14.4L20 6z" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.5"/>
+                    <path d="M10 22h20l-3 4H13l-3-4z" fill="currentColor" opacity="0.7"/>
+                    <circle cx="20" cy="20" r="2" fill="currentColor" opacity="0.6"/>
+                </svg>
+                <span class="logo-text">LAMBORGHINI</span>
+            </a>
+        </div>
+        <div class="nav-center">
+            <a href="#" class="nav-link active" data-page="showcase">Showcase</a>
+            <a href="#" class="nav-link" data-page="performance">Performance</a>
+            <a href="#" class="nav-link" data-page="store">Store</a>
+            <a href="#" class="nav-link" data-page="gallery">Garage</a>
+            <a href="#" class="nav-link" data-page="reserve">Reserve</a>
+            <a href="#" class="nav-link" id="navAdminLink" data-page="admin" style="display: none;">Admin</a>
+        </div>
+        <div class="nav-right">
+            <div class="auth-wrapper" id="authWrapper">
+                <button class="nav-auth-btn" id="navAuthBtn" aria-label="Login or Sign Up">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <span>Login / Sign Up</span>
+                </button>
+                <div class="auth-dropdown" id="authDropdown">
+                    <div class="auth-dropdown-user" id="authDropdownUser">Not logged in</div>
+                    <button class="dropdown-item" id="btnLogout" style="display: none;">Logout</button>
+                </div>
+            </div>
+            <button class="nav-cart-btn" id="navCartBtn" aria-label="Open Shopping Cart">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===================== LEFT SIDE UTILITY ICONS ===================== -->
+    <aside class="left-panel" id="leftPanel">
+        <button class="side-icon-btn" aria-label="Gallery" data-tooltip="Gallery">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+            </svg>
+        </button>
+        <button class="side-icon-btn" aria-label="Specifications" data-tooltip="Specifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+        </button>
+        <button class="side-icon-btn" aria-label="Dimensions" data-tooltip="Dimensions">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 3H3v18h18V3z"/>
+                <path d="M9 3v18"/>
+                <path d="M3 9h18"/>
+            </svg>
+        </button>
+        <div class="side-divider"></div>
+        <button class="side-icon-btn" aria-label="360° View" data-tooltip="360° View">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6"/>
+                <path d="M2.5 22v-6h6"/>
+                <path d="M2.5 11.5a10 10 0 0 1 17.07-5.93L21.5 8"/>
+                <path d="M21.5 12.5a10 10 0 0 1-17.07 5.93L2.5 16"/>
+            </svg>
+        </button>
+    </aside>
+
+    <!-- ===================== RIGHT SIDE SPEC ICONS ===================== -->
+    <aside class="right-panel" id="rightPanel">
+        <button class="spec-icon-btn" data-spec="engine" aria-label="Engine">
+            <div class="spec-icon-ring"></div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M16.95 16.95l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M16.95 7.05l1.42-1.42"/>
+            </svg>
+            <span class="spec-label">Engine</span>
+        </button>
+        <button class="spec-icon-btn" data-spec="aero" aria-label="Aerodynamics">
+            <div class="spec-icon-ring"></div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17.7 7.7A7.1 7.1 0 0 0 3 12h1a6 6 0 0 1 10.7-3.8"/>
+                <path d="M21 12h-1a6 6 0 0 1-10.7 3.8"/>
+                <polyline points="17 3 21 7 17 11"/>
+            </svg>
+            <span class="spec-label">Aero</span>
+        </button>
+        <button class="spec-icon-btn" data-spec="wheels" aria-label="Wheels">
+            <div class="spec-icon-ring"></div>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="4"/>
+                <line x1="12" y1="2" x2="12" y2="8"/>
+                <line x1="12" y1="16" x2="12" y2="22"/>
+                <line x1="2" y1="12" x2="8" y2="12"/>
+                <line x1="16" y1="12" x2="22" y2="12"/>
+            </svg>
+            <span class="spec-label">Wheels</span>
+        </button>
+        <button class="spec-icon-btn" data-spec="exhaust" aria-label="Exhaust">
+            <div class="spec-icon-ring"></div>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 16c0-4 4-6 4-10"/>
+                <path d="M12 16c0-4 4-6 4-10"/>
+                <path d="M16 16c0-4 4-6 4-10"/>
+                <rect x="4" y="16" width="18" height="4" rx="2"/>
+            </svg>
+            <span class="spec-label">Exhaust</span>
+        </button>
+    </aside>
+
+    <!-- ===================== SVG CONNECTION LINES ===================== -->
+    <svg class="connection-lines" id="connectionLines" aria-hidden="true">
+        <line class="conn-line" id="connLine-engine" x1="0" y1="0" x2="0" y2="0"/>
+        <line class="conn-line" id="connLine-aero" x1="0" y1="0" x2="0" y2="0"/>
+        <line class="conn-line" id="connLine-wheels" x1="0" y1="0" x2="0" y2="0"/>
+        <line class="conn-line" id="connLine-exhaust" x1="0" y1="0" x2="0" y2="0"/>
+    </svg>
+
+    <!-- ===================== 3D CANVAS CONTAINER ===================== -->
+    <div id="canvasContainer" class="canvas-container"></div>
+
+    <!-- ===================== HOTSPOTS (overlaid on 3D model) ===================== -->
+    <div class="hotspot" id="hotspot-engine" data-spec="engine">
+        <div class="hotspot-pulse"></div>
+        <div class="hotspot-dot"></div>
+    </div>
+    <div class="hotspot" id="hotspot-aero" data-spec="aero">
+        <div class="hotspot-pulse"></div>
+        <div class="hotspot-dot"></div>
+    </div>
+    <div class="hotspot" id="hotspot-wheels" data-spec="wheels">
+        <div class="hotspot-pulse"></div>
+        <div class="hotspot-dot"></div>
+    </div>
+    <div class="hotspot" id="hotspot-exhaust" data-spec="exhaust">
+        <div class="hotspot-pulse"></div>
+        <div class="hotspot-dot"></div>
+    </div>
+
+    <!-- ===================== TOOLTIP CARD ===================== -->
+    <div class="tooltip-card" id="tooltipCard">
+        <div class="tooltip-header">
+            <span class="tooltip-tag" id="tooltipTag">POWERTRAIN</span>
+            <span class="tooltip-close" id="tooltipClose" aria-label="Close tooltip">&times;</span>
+        </div>
+        <h3 class="tooltip-title" id="tooltipTitle">Naturally Aspirated V12</h3>
+        <div class="tooltip-specs">
+            <div class="tooltip-spec-item">
+                <span class="tooltip-spec-value" id="tooltipVal1">770</span>
+                <span class="tooltip-spec-unit" id="tooltipUnit1">CV</span>
+            </div>
+            <div class="tooltip-spec-divider"></div>
+            <div class="tooltip-spec-item">
+                <span class="tooltip-spec-value" id="tooltipVal2">720</span>
+                <span class="tooltip-spec-unit" id="tooltipUnit2">Nm</span>
+            </div>
+            <div class="tooltip-spec-divider"></div>
+            <div class="tooltip-spec-item">
+                <span class="tooltip-spec-value" id="tooltipVal3">2.8</span>
+                <span class="tooltip-spec-unit" id="tooltipUnit3">0-100 km/h</span>
+            </div>
+        </div>
+        <p class="tooltip-desc" id="tooltipDesc">The iconic 6.5L V12 engine delivers an intoxicating 8,500 rpm redline with 770 CV of pure naturally aspirated fury.</p>
+    </div>
+
+    <!-- ===================== TAILORING & CUSTOMIZATION PANEL ===================== -->
+    <section class="customizer-panel" id="customizerPanel" aria-label="Car Customization Options">
+        <!-- Paint Selector -->
+        <div class="cust-group">
+            <h4 class="cust-title">Exterior Paint</h4>
+            <div class="color-options">
+                <button class="color-dot active" data-color="#FF8700" data-material="CARROSSERIE" style="--dot-color: #FF8700;" aria-label="Arancio Argos (Orange)"></button>
+                <button class="color-dot" data-color="#39FF14" data-material="CARROSSERIE" style="--dot-color: #39FF14;" aria-label="Verde Mantis (Green)"></button>
+                <button class="color-dot" data-color="#FFD700" data-material="CARROSSERIE" style="--dot-color: #FFD700;" aria-label="Giallo Orion (Yellow)"></button>
+                <button class="color-dot" data-color="#CC0000" data-material="CARROSSERIE" style="--dot-color: #CC0000;" aria-label="Rosso Mars (Red)"></button>
+                <button class="color-dot" data-color="#007FFF" data-material="CARROSSERIE" style="--dot-color: #007FFF;" aria-label="Blu Cepheus (Blue)"></button>
+                <button class="color-dot" data-color="#5A005A" data-material="CARROSSERIE" style="--dot-color: #5A005A;" aria-label="Viola Parsifae (Purple)"></button>
+                <button class="color-dot" data-color="#404347" data-material="CARROSSERIE" style="--dot-color: #404347;" aria-label="Grigio Telesto (Grey)"></button>
+                <button class="color-dot" data-color="#111111" data-material="CARROSSERIE" style="--dot-color: #111111;" aria-label="Nero Aldebaran (Black)"></button>
+                <button class="color-dot" data-color="#FFFFFF" data-material="CARROSSERIE" style="--dot-color: #FFFFFF;" aria-label="Bianco Isis (White)"></button>
+            </div>
+        </div>
+
+        <div class="cust-divider"></div>
+
+        <!-- Lighting Presets -->
+        <div class="cust-group">
+            <h4 class="cust-title">Studio Environment</h4>
+            <div class="light-presets">
+                <button class="preset-btn active" data-preset="studio" aria-label="Studio Lighting">Studio</button>
+                <button class="preset-btn" data-preset="midnight" aria-label="Midnight Lighting">Midnight</button>
+                <button class="preset-btn" data-preset="neon" aria-label="Neon Lighting">Neon-X</button>
+            </div>
+        </div>
+
+        <div class="cust-divider"></div>
+
+        <!-- Headlight Toggle -->
+        <div class="cust-group toggle-group">
+            <h4 class="cust-title">Headlights</h4>
+            <button class="toggle-switch" id="headlightToggle" aria-label="Toggle Headlights" aria-checked="false">
+                <span class="toggle-handle"></span>
+            </button>
+        </div>
+    </section>
+
+    <!-- ===================== V12 ENGINE RPM HUD ===================== -->
+    <div class="engine-hud" id="engineHud" aria-hidden="true">
+        <div class="hud-ring-container">
+            <svg class="hud-ring-svg" viewBox="0 0 100 100">
+                <circle class="hud-ring-bg" cx="50" cy="50" r="45" />
+                <circle class="hud-ring-bar" id="rpmBar" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="283" />
+            </svg>
+            <div class="hud-data">
+                <span class="hud-rpm-val" id="rpmVal">1,000</span>
+                <span class="hud-rpm-unit">RPM</span>
+            </div>
+        </div>
+        <div class="hud-details">
+            <span class="hud-title">V12 ENGINE ACTIVE</span>
+            <button class="hud-rev-btn" id="hudRevBtn">HOLD TO REV</button>
+        </div>
+    </div>
+
+    <!-- ===================== BOTTOM LEFT: CONFIGURE CTA ===================== -->
+    <div class="cta-area" id="ctaArea">
+        <div class="cta-model-name">
+            <span class="cta-series">AVENTADOR</span>
+            <span class="cta-variant">LP 780-4 ULTIMAE</span>
+        </div>
+        <button class="cta-configure" id="ctaBtn" aria-label="Configure your Aventador">
+            <span class="cta-configure-text">CONFIGURE</span>
+            <span class="cta-configure-arrow">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </span>
+            <span class="cta-configure-fill"></span>
+        </button>
+    </div>
+
+    <!-- ===================== BOTTOM RIGHT: DRAG HINT ===================== -->
+    <div class="drag-hint" id="dragHint">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 3 21 3 21 9"/>
+            <polyline points="9 21 3 21 3 15"/>
+            <line x1="21" y1="3" x2="14" y2="10"/>
+            <line x1="3" y1="21" x2="10" y2="14"/>
+        </svg>
+        <span>Drag to rotate</span>
+    </div>
+
+    <!-- ===================== TOAST NOTIFICATION ===================== -->
+    <div class="toast" id="toastNotification" aria-live="polite">Configuration Saved to Garage!</div>
+
+    <!-- ===================== PAGE: PERFORMANCE TELEMETRY ===================== -->
+    <div class="page-overlay" id="page-performance">
+        <div class="perf-container">
+            <h2 class="page-title">V12 DYNAMIC TELEMETRY</h2>
+            
+            <div class="telemetry-grid">
+                <!-- Speed & Gear HUD -->
+                <div class="telemetry-card glass">
+                    <div class="speedo-container">
+                        <svg class="speedo-gauge" viewBox="0 0 100 100">
+                            <path class="gauge-bg" d="M 20 80 A 40 40 0 1 1 80 80" />
+                            <path class="gauge-fill" id="speedoBar" d="M 20 80 A 40 40 0 1 1 80 80" stroke-dasharray="188" stroke-dashoffset="188" />
+                        </svg>
+                        <div class="speedo-text">
+                            <span class="speed-number" id="telemetrySpeed">0</span>
+                            <span class="speed-unit">KM/H</span>
+                        </div>
+                    </div>
+                    <div class="gear-display">
+                        <span class="gear-label">GEAR</span>
+                        <span class="gear-val" id="telemetryGear">N</span>
+                    </div>
+                </div>
+
+                <!-- G-Force Plotter -->
+                <div class="telemetry-card glass gforce-card">
+                    <h3 class="card-title">G-FORCE METER</h3>
+                    <div class="gforce-plot">
+                        <div class="gforce-grid-circle circle-1"></div>
+                        <div class="gforce-grid-circle circle-2"></div>
+                        <div class="gforce-grid-crosshairs-h"></div>
+                        <div class="gforce-grid-crosshairs-v"></div>
+                        <div class="gforce-dot" id="gforceDot"></div>
+                    </div>
+                    <div class="gforce-readouts">
+                        <span>LATERAL: <strong id="gforceLat">0.00G</strong></span>
+                        <span>LONGITUDINAL: <strong id="gforceLong">0.00G</strong></span>
+                    </div>
+                </div>
+
+                <!-- Technical Specs Readout -->
+                <div class="telemetry-card glass stats-card">
+                    <h3 class="card-title">SYSTEM DIAGNOSTICS</h3>
+                    <div class="stat-row">
+                        <span>Aero Wing Angle</span>
+                        <span id="statAero">4° (Low Drag)</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Throttle Opening</span>
+                        <span id="statThrottle">0%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Brake Temp (Front)</span>
+                        <span id="statBrakeTemp">85°C</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Tire Grip Level</span>
+                        <span id="statGrip">100% (Dry Sport)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Launch Control Action -->
+            <div class="launch-control-area">
+                <button class="launch-btn" id="launchBtn">
+                    <span class="launch-btn-glow"></span>
+                    <span class="launch-btn-text">ACTIVATE LAUNCH CONTROL</span>
+                </button>
+                <p class="launch-hint">Hold spacebar or click button to initiate dynamic V12 acceleration test.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== PAGE: GARAGE CONFIGURATIONS ===================== -->
+    <div class="page-overlay" id="page-gallery">
+        <div class="gallery-container">
+            <h2 class="page-title">AVENTADOR GARAGE</h2>
+            <p class="page-subtitle">Explore community designs or manage your personal commissions.</p>
+            
+            <div class="garage-tabs">
+                <button class="garage-tab-btn active" id="tabCommunityBtn">COMMUNITY DESIGNS</button>
+                <button class="garage-tab-btn" id="tabMyGarageBtn">MY COMMISSIONS</button>
+            </div>
+
+            <!-- Tab 1: Community Specs -->
+            <div class="garage-tab-content active" id="garageCommunityContent">
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Loaded dynamically -->
+                    <div class="gallery-loading" id="galleryLoading">
+                        <div class="loading-spinner"></div>
+                        <span>fetching configurations...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: My Garage (Private Specs & Consultation Requests & Orders) -->
+            <div class="garage-tab-content" id="garagePersonalContent">
+                <div class="garage-personal-layout">
+                    <div class="personal-configs-section">
+                        <h3>MY SAVED SPECIFICATIONS</h3>
+                        <div class="gallery-grid" id="personalGrid">
+                            <!-- Loaded dynamically -->
+                            <div class="gallery-loading">Please log in to view your saved designs.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="personal-consults-section">
+                        <h3>MY CONSULTATION REQUESTS</h3>
+                        <div class="consults-list" id="personalConsultsList">
+                            <div class="gallery-loading">Please log in to view your requests.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="personal-orders-section">
+                        <h3>MY STORE ORDERS</h3>
+                        <div class="orders-list" id="personalOrdersList">
+                            <div class="gallery-loading">Please log in to view your orders.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== PAGE: AUTHENTICATION ===================== -->
+    <div class="page-overlay" id="page-auth">
+        <div class="auth-container glass">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="tabLoginBtn">LOGIN</button>
+                <button class="auth-tab" id="tabRegisterBtn">SIGN UP</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form class="auth-form" id="loginForm">
+                <h3 class="auth-title">ACCESS YOUR GARAGE</h3>
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" required placeholder="e.g. user1" />
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" />
+                </div>
+                <button type="submit" class="submit-booking-btn">
+                    <span>ENTER GARAGE</span>
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm" style="display: none;">
+                <h3 class="auth-title">CREATE BESPOKE PROFILE</h3>
+                <div class="form-group">
+                    <label for="regUsername">Username</label>
+                    <input type="text" id="regUsername" required placeholder="e.g. stephen_strange" />
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" required placeholder="e.g. doctor@kamartaj.org" />
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <input type="password" id="regPassword" required placeholder="••••••••" />
+                </div>
+                <button type="submit" class="submit-booking-btn">
+                    <span>CREATE PROFILE</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===================== PAGE: BESPOKE STORE ===================== -->
+    <div class="page-overlay" id="page-store">
+        <div class="store-container">
+            <h2 class="page-title">BESPOKE UPGRADE CATALOG</h2>
+            <p class="page-subtitle">Personalize your Aventador with ultra-premium styling kits and official accessories.</p>
+            
+            <div class="store-grid">
+                <!-- Card 1 -->
+                <div class="store-card glass">
+                    <div class="store-card-visual">
+                        <svg class="store-svg" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 20h80l-5 8H15l-5-8z" fill="#FF8700" />
+                            <path d="M25 28l-5 15h5l5-15h-5zM75 28l-5 15h5l5-15h-5z" fill="#555" />
+                        </svg>
+                    </div>
+                    <div class="store-card-info">
+                        <span class="store-tag">AERODYNAMICS</span>
+                        <h3 class="store-item-name">ALA 2.0 Carbon Wing</h3>
+                        <p class="store-item-desc">Active aerodynamic rear wing made from high-gloss forged carbon fiber. Increases downforce by 40%.</p>
+                        <div class="store-card-footer">
+                            <span class="store-item-price">$12,500</span>
+                            <button class="add-to-cart-btn" data-id="ala-wing" data-name="ALA 2.0 Carbon Wing" data-price="12500">ADD TO SPEC</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="store-card glass">
+                    <div class="store-card-visual">
+                        <svg class="store-svg" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="25" y="20" width="50" height="20" rx="3" fill="#333" />
+                            <circle cx="35" cy="30" r="6" fill="#888" stroke="#111" stroke-width="2" />
+                            <circle cx="65" cy="30" r="6" fill="#888" stroke="#111" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="store-card-info">
+                        <span class="store-tag">EXHAUST</span>
+                        <h3 class="store-item-name">Titanium Race Exhaust</h3>
+                        <p class="store-item-desc">Ultra-lightweight high-flow titanium exhaust system. Delivers an uninhibited naturally aspirated V12 screech (-15kg).</p>
+                        <div class="store-card-footer">
+                            <span class="store-item-price">$18,900</span>
+                            <button class="add-to-cart-btn" data-id="titanium-exhaust" data-name="Titanium Race Exhaust" data-price="18900">ADD TO SPEC</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="store-card glass">
+                    <div class="store-card-visual">
+                        <svg class="store-svg" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="30" r="22" stroke="#555" stroke-width="4" fill="none" />
+                            <circle cx="50" cy="30" r="6" fill="#FF8700" />
+                            <line x1="50" y1="8" x2="50" y2="52" stroke="#444" stroke-width="2" />
+                            <line x1="28" y1="30" x2="72" y2="30" stroke="#444" stroke-width="2" />
+                        </svg>
+                    </div>
+                    <div class="store-card-info">
+                        <span class="store-tag">CHASSIS</span>
+                        <h3 class="store-item-name">Nireo Forged Alloys (20/21")</h3>
+                        <p class="store-item-desc">Monoblock forged aluminum wheels in matte bronze finish. Saves rotational mass for sharper turn-in.</p>
+                        <div class="store-card-footer">
+                            <span class="store-item-price">$9,200</span>
+                            <button class="add-to-cart-btn" data-id="forged-wheels" data-name="Nireo Forged Alloys" data-price="9200">ADD TO SPEC</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="store-card glass">
+                    <div class="store-card-visual">
+                        <svg class="store-svg" viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="30" r="20" stroke="#111" stroke-width="6" fill="none" />
+                            <rect x="42" y="27" width="16" height="6" fill="#FF8700" />
+                        </svg>
+                    </div>
+                    <div class="store-card-info">
+                        <span class="store-tag">INTERIOR</span>
+                        <h3 class="store-item-name">Carbon Alcantara Steering</h3>
+                        <p class="store-item-desc">Motorsport steering wheel in Alcantara with exposed forged carbon fibers and orange stripe.</p>
+                        <div class="store-card-footer">
+                            <span class="store-item-price">$3,800</span>
+                            <button class="add-to-cart-btn" data-id="carbon-steering" data-name="Carbon Alcantara Steering" data-price="3800">ADD TO SPEC</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== SLIDING CART DRAWER ===================== -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-drawer-header">
+            <h3>ACTIVE SPECIFICATION ITEMS</h3>
+            <button class="cart-close-btn" id="cartCloseBtn" aria-label="Close cart">&times;</button>
+        </div>
+        
+        <div class="cart-items-container" id="cartItemsContainer">
+            <div class="cart-empty-message">No custom parts added. Customize your spec from the Store!</div>
+        </div>
+
+        <div class="cart-drawer-footer">
+            <div class="cart-total-row">
+                <span>ESTIMATED PARTS TOTAL</span>
+                <strong id="cartTotalVal">$0</strong>
+            </div>
+            
+            <form class="cart-checkout-form" id="cartCheckoutForm">
+                <div class="form-group">
+                    <label for="cartClientName">Delivery Name</label>
+                    <input type="text" id="cartClientName" required placeholder="e.g. Stephen Strange" />
+                </div>
+                <button type="submit" class="submit-booking-btn checkout-submit-btn" id="checkoutBtn" disabled>
+                    <span>SUBMIT SPEC ORDER</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="cart-overlay-blur" id="cartOverlayBlur"></div>
+
+    <!-- ===================== PAGE: DEALERSHIP ADMIN PANEL ===================== -->
+    <div class="page-overlay" id="page-admin">
+        <div class="admin-container glass">
+            <h2 class="page-title">DEALERSHIP ADMINISTRATIVE CENTER</h2>
+            <p class="page-subtitle">Track, audit, and coordinate client commissions and consultations.</p>
+            
+            <div class="admin-tabs">
+                <button class="admin-tab-btn active" id="adminTabConsultsBtn">CONSULTATIONS</button>
+                <button class="admin-tab-btn" id="adminTabOrdersBtn">ACCESSORIES ORDERS</button>
+            </div>
+
+            <!-- Admin Consultations Log -->
+            <div class="admin-tab-content active" id="adminConsultsContent">
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>CLIENT</th>
+                                <th>COMMISSION SPEC</th>
+                                <th>PAINT</th>
+                                <th>LIGHTS</th>
+                                <th>STUDIO</th>
+                                <th>DATE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminConsultsTableBody">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Store Orders Log -->
+            <div class="admin-tab-content" id="adminOrdersContent">
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>CLIENT</th>
+                                <th>ITEMS ORDERED</th>
+                                <th>TOTAL AMOUNT</th>
+                                <th>DATE</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrdersTableBody">
+                            <!-- Loaded dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== PAGE: RESERVE / BOOKING ===================== -->
+    <div class="page-overlay" id="page-reserve">
+        <div class="reserve-container glass">
+            <h2 class="reserve-title">TAILOR & RESERVE</h2>
+            <p class="reserve-subtitle">Lock in your bespoke configuration and request a priority dealership consult.</p>
+            
+            <form class="reserve-form" id="reserveForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientName">Full Name</label>
+                        <input type="text" id="clientName" required placeholder="e.g. Stephen Strange" />
+                    </div>
+                    <div class="form-group">
+                        <label for="clientEmail">Email Address</label>
+                        <input type="email" id="clientEmail" required placeholder="e.g. doctor@kamartaj.org" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="configName">Bespoke Edition Name</label>
+                    <input type="text" id="configName" required placeholder="e.g. Aventador Nero Stealth" />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="configColor">Active Paint Selection</label>
+                        <input type="text" id="configColor" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label for="configPreset">Active Lighting Studio</label>
+                        <input type="text" id="configPreset" readonly />
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-booking-btn" id="submitBookingBtn">
+                    <span>PUBLISH SPEC & REQUEST CONSULT</span>
+                </button>
+            </form>
+
+            <div class="success-screen" id="successScreen">
+                <div class="success-icon-container">
+                    <svg class="success-svg" viewBox="0 0 52 52">
+                        <circle class="success-circle" cx="26" cy="26" r="25" fill="none" />
+                        <path class="success-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                </div>
+                <h3>SPECIFICATION RECORDED</h3>
+                <p>Your custom specification has been registered. Redirecting to the community garage...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js" type="module"></script>
+</body>
+</html>

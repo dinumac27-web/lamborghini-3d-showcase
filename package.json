@@ -1,0 +1,13 @@
+{
+  "name": "lamborghini-3d-showcase",
+  "version": "1.0.0",
+  "description": "Full Stack 3D Lamborghini Aventador Showcase",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
